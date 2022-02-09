@@ -1,0 +1,13 @@
+{
+  "appId": "app.wallet.out.jtml",
+  "appName": "Wallet Out",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

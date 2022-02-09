@@ -1,0 +1,53 @@
+
+<template>
+  <div id="app">
+
+
+  
+    <!-- Right panel with reveal effect-->
+    <div class="panel panel-right panel-reveal ">
+      <div class="view">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+              <div class="title">Opciones</div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="list simple-list">
+              <ul>
+                <li>
+                  <span>Tema</span>
+                  <label class="toggle toggle-init color-black">
+                    <input type="checkbox" @click=${ChangeTheme}/>
+                    <span class="toggle-icon"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Your main view, should have "view-main" class -->
+    <div class="view view-main view-init safe-areas" data-url="/"></div>
+
+
+   
+  
+    
+
+  </div>
+</template>
+<script>
+  export default (props, { $, $f7, $update }) => {
+    // Login screen demo data
+    const ChangeTheme = () =>{
+    $('body').toggleClass('theme-dark');
+
+  }
+    return $render;
+  }
+</script>

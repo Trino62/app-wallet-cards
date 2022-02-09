@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.f7": "html"
+  },
+  "editor.bracketPairColorization.enabled": true
+}

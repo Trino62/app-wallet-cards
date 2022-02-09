@@ -1,0 +1,240 @@
+<template>
+  <div class="page" data-name="home">
+    <!-- Top Navbar -->
+    <div class="navbar navbar-large">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="left">
+
+        </div>
+        <div class="title sliding">Wallet Out</div>
+        <div class="right">
+          <a href="#" class="link icon-only panel-open" data-panel="right">
+            <i class="icon material-icons if-md">settings</i>
+          </a>
+        </div>
+        <div class="title-large">
+          <div class="title-large-text">Wallet Out</div>
+        </div>
+      </div>
+    </div>
+    <!-- Toolbar
+    <div class="toolbar toolbar-bottom">
+      <div class="toolbar-inner">
+        <a href="#" class="link">Left Link</a>
+        <a href="#" class="link">Right Link</a>
+        <a href="#" class="link">Right Link</a>
+
+      </div>
+    </div>-->
+    <!-- Scrollable page content-->
+    <div class="page-content">
+      <div class="block block-strong">
+        <p>Todas las tarjetas</p>
+      </div>
+
+      <a class="button button-fill sheet-open" href="#" data-sheet=".my-sheet-top">Agregar tarjeta</a>
+
+      <div class="sheet-modal sheet-modal-top my-sheet-top" style="--f7-sheet-height: 400px;">
+        <div class="toolbar toolbar-bottom">
+          <div class="toolbar-inner">
+            <div class="left"></div>
+            <div class="right"><a class="link sheet-close text-color-red" href="#">Cancelar</a></div>
+          </div>
+        </div>
+        <div class="sheet-modal-inner">
+          <div class="block">
+            <h2>Agregar tarjeta</h2>
+            <div class="list no-hairlines-md">
+              <ul>
+                <li class="item-content item-input item-input-outline">
+                  <div class="item-inner">
+                    <div class="item-title item-floating-label">Alias de la tarjeta</div>
+                    <div class="item-input-wrap">
+                      <input type="text" id="alias"  />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input item-input-outline">
+                  <div class="card-js" id="my-card">
+                    <input class="card-number my-custom-class " id="card-number" />
+                    <input class="expiry-month" id="expiry-month" />
+                    <input class="expiry-year" id="expiry-year" />
+                    <input class="cvc" id="cvc" />
+                  </div>
+                </li>
+              </ul>
+            </div>
+          
+
+         
+
+            <br />
+            <a class="button button-fill color-yellow" @click=${AddCard}>Guardar</a>
+          </div>
+        </div>
+      </div>
+
+
+      ${loading ? $h`
+
+      <div class="card skeleton-text skeleton-effect-wave">
+        <div class="card-header">Card header</div>
+        <div class="card-content card-content-padding">Card with header and footer. Card headers are used to display
+          card titles and footers for additional information or just for custom actions.</div>
+        <div class="card-footer">Card Footer</div>
+      </div>
+
+      ` : $h`
+      ${wallet.map((w) => $h`
+
+
+      <div class="card">
+        <div class="card-header">${w.alias ? w.alias : "Sin alias"} </div>
+        <div class="card-content card-content-padding">
+        
+          <div class="list contacts-list">
+            <div class="list-group">
+              <ul>
+                <li class="list-group-title"><i class="icon material-icons">credit_card</i></li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">${w.Cardnum}</div>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-title"><i class="icon material-icons">today</i></li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">${w.CardMonth} / ${w.CardYear}</div>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-title"><i class="icon material-icons">lock</i></li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">${w.CardCV}</div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+
+        </div>
+        <div class="card-footer">${w.id}</div>
+      </div>
+
+      `)}
+
+      `}
+
+
+
+    
+
+
+    </div>
+
+  </div>
+</template>
+<script>
+  import { initializeApp } from 'firebase/app';
+  import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+  const firebaseApp = initializeApp({
+    apiKey: "AIzaSyDBorCKkkN2D1h5ZHgu4hg0gaf8faqR1nU",
+    authDomain: "walllet-offline.firebaseapp.com",
+    projectId: "walllet-offline",
+  });
+
+  const db = getFirestore();
+
+  export default (props, { $, $f7, $on, $update }) => {
+    let loading = true;
+    let wallet = []
+
+    const AddCard = async () => {
+      let SuccesSaveCard
+      let ErrorSaveCard
+      let Vacio;
+      let CardNum = $('#card-number').val()
+      let CardExpireMonth = $('#expiry-month').val()
+      let CardExpireYear = $('#expiry-year').val()
+      let CardCvc = $('#cvc').val()
+      let alias = $('#alias').val()
+
+
+      if (!Vacio) {
+        Vacio = $f7.toast.create({
+          text: 'Rellene todos los campos.',
+          position: 'top',
+          closeTimeout: 2000,
+        });
+      }
+
+      if (!SuccesSaveCard) {
+        SuccesSaveCard = $f7.toast.create({
+          icon: '<i class="material-icons">check</i>',
+          text: 'Registro Guardado',
+          position: 'center',
+          closeTimeout: 2000,
+        });
+      }
+
+      if (!ErrorSaveCard) {
+        ErrorSaveCard = $f7.toast.create({
+          icon: '<i class="material-icons">priority_high</i>',
+          text: 'Ocurrio un error',
+          position: 'center',
+          closeTimeout: 2000,
+        });
+      }
+
+      if (CardNum == "" || CardExpireMonth == "" || CardExpireYear == "" || CardCvc == "" || alias == "") {
+        // Open it
+        Vacio.open();
+      } else {
+        try {
+          const docRef = await addDoc(collection(db, "wall"), {
+            CardNum,
+            CardExpireMonth,
+            CardExpireYear,
+            CardCvc, 
+            alias
+          });
+          //console.log("Document written with ID: ", docRef.id);
+          // Open it
+          SuccesSaveCard.open();
+          $f7.sheet.close('.my-sheet');
+        } catch (e) {
+          console.error("Error adding document: ", e);
+          ErrorSaveCard.open();
+        }
+      }
+    }
+
+    $on('pageInit', async () => {
+      const querySnapshot = await getDocs(collection(db, "wall"));
+      querySnapshot.forEach((doc) => {
+        //console.log(`${doc.id} => ${doc.data()}`);
+        wallet.push({
+          id: doc.id, Cardnum: doc.data().CardNum, CardYear: doc.data().CardExpireYear, CardMonth: doc.data().CardExpireMonth, CardCV: doc.data().CardCvc, alias: doc.data().alias
+        })
+        loading =false
+        $update()
+      });
+    
+      
+    
+    })
+
+
+
+    return $render;
+  }
+</script>
